@@ -2,58 +2,58 @@
 ### University of Zululand – Group 7
 ### Django + Scikit-learn Cost Estimation App
 
----
+
 
 ## Project Structure
 
-```
+
 tailor_project/
 │
 ├── manage.py
 ├── requirements.txt
-├── db.sqlite3                        ← created after migrations
+├── db.sqlite3                         created after migrations
 │
-├── tailor_project/                   ← Django project config
+├── tailor_project/                    Django project config
 │   ├── __init__.py
 │   ├── settings.py
 │   ├── urls.py
 │   └── wsgi.py
 │
-└── estimator/                        ← main Django app
+└── estimator/                         main Django app
     ├── __init__.py
-    ├── apps.py                       ← loads ML model at startup
-    ├── admin.py                      ← Django admin registration
-    ├── forms.py                      ← Login, Register, Profile, Estimate forms
-    ├── models.py                     ← TailorProfile, EstimateHistory
-    ├── views.py                      ← All views (auth, estimator, history, profile)
-    ├── urls.py                       ← App URL routes
+    ├── apps.py                        loads ML model at startup
+    ├── admin.py                       Django admin registration
+    ├── forms.py                       Login, Register, Profile, Estimate forms
+    ├── models.py                      TailorProfile, EstimateHistory
+    ├── views.py                       All views (auth, estimator, history, profile)
+    ├── urls.py                        App URL routes
     │
     ├── ml/
     │   ├── __init__.py
-    │   ├── predictor.py              ← ML model wrapper (load + predict)
-    │   ├── fine_tuned_random_forest_regressor.joblib   ← YOUR MODEL
-    │   └── group_7_dataset.csv       ← YOUR DATASET
+    │   ├── predictor.py               ML model wrapper (load + predict)
+    │   ├── fine_tuned_random_forest_regressor.joblib    YOUR MODEL
+    │   └── group_7_dataset.csv        YOUR DATASET
     │
     ├── static/
     │   ├── css/
-    │   │   ├── style.css             ← Main styles (from your design)
-    │   │   └── auth.css              ← Login/register styles
+    │   │   ├── style.css              Main styles (from your design)
+    │   │   └── auth.css               Login/register styles
     │   └── js/
-    │       └── estimator.js          ← AJAX + chat JS
+    │       └── estimator.js           AJAX + chat JS
     │
     ├── templates/estimator/
     │   ├── base.html
-    │   ├── login.html                ← Login page
-    │   ├── register.html             ← Sign up page
-    │   ├── estimator.html            ← Main estimator UI
-    │   ├── history.html              ← Estimate history table
-    │   └── profile.html              ← User profile
+    │   ├── login.html                 Login page
+    │   ├── register.html              Sign up page
+    │   ├── estimator.html             Main estimator UI
+    │   ├── history.html               Estimate history table
+    │   └── profile.html               User profile
     │
     └── management/commands/
-        └── create_admin.py           ← Quick admin creation command
-```
+        └── create_admin.py            Quick admin creation command
 
----
+
+
 
 ## Quick Setup (Step-by-Step)
 
@@ -80,13 +80,13 @@ python manage.py create_admin --email yourname@unizulu.ac.za --password yourpass
 ### 4. Start the server
 ```bash
 python manage.py runserver
-```
+
 
 ### 5. Open in browser
 - **App:** http://127.0.0.1:8000/login/
 - **Admin:** http://127.0.0.1:8000/admin/
 
----
+
 
 ## URL Routes
 
@@ -103,7 +103,7 @@ python manage.py runserver
 | `/profile/`       | profile_view    | View and edit tailor profile       |
 | `/admin/`         | Django Admin    | Manage users, profiles, estimates  |
 
----
+
 
 ## Model Inputs & Outputs
 
@@ -134,7 +134,7 @@ python manage.py runserver
 | Silk      | R 173             |
 | Wool      | R 217             |
 
----
+
 
 ## ML Model Notes
 
@@ -147,22 +147,22 @@ sklearn version, the system automatically retrains a new Random Forest from
 `group_7_dataset.csv` at startup. The retrained model is saved as
 `fine_tuned_random_forest_regressor_retrained.joblib` for future use.
 
----
+
 
 ## Features
 
-- ✅ Login / Sign Up / Sign Out (email-based auth)
-- ✅ Tailor profile with avatar initials and stats
-- ✅ Cost + Material estimation with breakdown
-- ✅ Nearest comparable garments from dataset
-- ✅ Estimate history with filters + pagination
-- ✅ Delete estimates from history
-- ✅ Natural language chat input ("silk dress 3m")
-- ✅ AJAX prediction (no page reload)
-- ✅ Django Admin dashboard
-- ✅ Responsive layout (mobile sidebar collapses)
+-  Login / Sign Up / Sign Out (email-based auth)
+-  Tailor profile with avatar initials and stats
+-  Cost + Material estimation with breakdown
+-  Nearest comparable garments from dataset
+-  Estimate history with filters + pagination
+-  Delete estimates from history
+-  Natural language chat input ("silk dress 3m")
+-  AJAX prediction (no page reload)
+-  Django Admin dashboard
+-  Responsive layout (mobile sidebar collapses)
 
----
+
 
 ## Django Admin
 
@@ -172,7 +172,7 @@ Access at `/admin/` with your superuser credentials.
 - **TailorProfile** – view all tailor accounts
 - **EstimateHistory** – view/filter/search all estimates across all users
 
----
+
 
 ## Deployment Notes (Production)
 
@@ -183,18 +183,18 @@ Access at `/admin/` with your superuser credentials.
 5. Use gunicorn + nginx in production
 6. Use PostgreSQL instead of SQLite for production
 
----
+
 
 ## Troubleshooting
 
 **"No module named 'sklearn'"**
-→ Run `pip install scikit-learn`
+ Run `pip install scikit-learn`
 
 **Model version warning**
-→ The system will auto-retrain. Check logs for "Model retrained."
+The system will auto-retrain. Check logs for "Model retrained."
 
 **Migrations error**
-→ Delete `db.sqlite3` and re-run `python manage.py migrate`
+ Delete `db.sqlite3` and re-run `python manage.py migrate`
 
 **Static files not loading**
-→ Run `python manage.py collectstatic` or confirm `STATICFILES_DIRS` path is correct
+ Run `python manage.py collectstatic` or confirm `STATICFILES_DIRS` path is correct
