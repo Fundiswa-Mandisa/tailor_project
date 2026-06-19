@@ -4,197 +4,356 @@
 
 
 
+
 ## Project Structure
 
-
+```
 tailor_project/
 │
 ├── manage.py
 ├── requirements.txt
-├── db.sqlite3                         created after migrations
+├── db.sqlite3                     # Created after migrations
 │
-├── tailor_project/                    Django project config
+├── tailor_project/                # Django project configuration
 │   ├── __init__.py
 │   ├── settings.py
 │   ├── urls.py
 │   └── wsgi.py
 │
-└── estimator/                         main Django app
+└── estimator/                     # Main Django application
     ├── __init__.py
-    ├── apps.py                        loads ML model at startup
-    ├── admin.py                       Django admin registration
-    ├── forms.py                       Login, Register, Profile, Estimate forms
-    ├── models.py                      TailorProfile, EstimateHistory
-    ├── views.py                       All views (auth, estimator, history, profile)
-    ├── urls.py                        App URL routes
+    ├── apps.py                    # Loads ML model at startup
+    ├── admin.py                   # Django admin registrations
+    ├── forms.py                   # Login, Register, Profile, and Estimate forms
+    ├── models.py                  # TailorProfile and EstimateHistory models
+    ├── views.py                   # Authentication, estimator, history, and profile views
+    ├── urls.py                    # Application URL routes
     │
     ├── ml/
     │   ├── __init__.py
-    │   ├── predictor.py               ML model wrapper (load + predict)
-    │   ├── fine_tuned_random_forest_regressor.joblib    YOUR MODEL
-    │   └── group_7_dataset.csv        YOUR DATASET
+    │   ├── predictor.py           # ML model wrapper (load and predict)
+    │   ├── fine_tuned_random_forest_regressor.joblib
+    │   └── group_7_dataset.csv
     │
     ├── static/
     │   ├── css/
-    │   │   ├── style.css              Main styles (from your design)
-    │   │   └── auth.css               Login/register styles
+    │   │   ├── style.css          # Main application styles
+    │   │   └── auth.css           # Authentication page styles
+    │   │
     │   └── js/
-    │       └── estimator.js           AJAX + chat JS
+    │       └── estimator.js       # AJAX and chat functionality
     │
     ├── templates/estimator/
     │   ├── base.html
-    │   ├── login.html                 Login page
-    │   ├── register.html              Sign up page
-    │   ├── estimator.html             Main estimator UI
-    │   ├── history.html               Estimate history table
-    │   └── profile.html               User profile
+    │   ├── login.html             # User login page
+    │   ├── register.html          # User registration page
+    │   ├── estimator.html         # Main cost estimation interface
+    │   ├── history.html           # Estimation history page
+    │   └── profile.html           # User profile page
     │
     └── management/commands/
-        └── create_admin.py            Quick admin creation command
+        └── create_admin.py        # Quick admin creation command
+```
 
 
+# Quick Setup Guide
 
+## 1. Install Dependencies
 
-## Quick Setup (Step-by-Step)
-
-### 1. Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Run database migrations
+## 2. Run Database Migrations
+
 ```bash
 python manage.py makemigrations estimator
 python manage.py migrate
 ```
 
-### 3. Create admin user
-```bash
-# Default: admin@unizulu.ac.za / admin1234
-python manage.py create_admin
+## 3. Create an Admin User
 
-# Or custom:
-python manage.py create_admin --email yourname@unizulu.ac.za --password yourpass
+Default credentials:
+
+```bash
+python manage.py create_admin
 ```
 
-### 4. Start the server
+Default account:
+
+```text
+Email: admin@unizulu.ac.za
+Password: admin1234
+```
+
+Create a custom administrator account:
+
+```bash
+python manage.py create_admin --email yourname@unizulu.ac.za --password yourpassword
+```
+
+## 4. Start the Development Server
+
 ```bash
 python manage.py runserver
+```
 
+## 5. Open the Application
 
-### 5. Open in browser
-- **App:** http://127.0.0.1:8000/login/
-- **Admin:** http://127.0.0.1:8000/admin/
+Application:
 
+```text
+http://127.0.0.1:8000/login/
+```
 
+Django Admin:
 
-## URL Routes
-
-| URL               | View            | Description                        |
-|-------------------|-----------------|------------------------------------|
-| `/login/`         | login_view      | Login page (email + password)      |
-| `/register/`      | register_view   | Sign up / create account           |
-| `/logout/`        | logout_view     | Signs out and redirects to login   |
-| `/estimator/`     | estimator_view  | Main cost estimator (form + result)|
-| `/api/predict/`   | predict_ajax    | AJAX prediction endpoint (JSON)    |
-| `/api/chat/`      | chat_predict    | Natural language chat endpoint     |
-| `/history/`       | history_view    | Paginated estimate history         |
-| `/history/delete/<id>/` | delete_estimate | Delete one estimate          |
-| `/profile/`       | profile_view    | View and edit tailor profile       |
-| `/admin/`         | Django Admin    | Manage users, profiles, estimates  |
+```text
+http://127.0.0.1:8000/admin/
+```
 
 
 
-## Model Inputs & Outputs
+# URL Routes
 
-### Inputs (from the form)
-| Field        | Type   | Example    |
-|--------------|--------|------------|
-| Garment      | Select | Dress      |
-| Fabric_Type  | Select | Silk       |
-| Fabric_m     | Float  | 2.5        |
-
-### Outputs (displayed in result panels)
-| Field            | Description                          |
-|------------------|--------------------------------------|
-| Material_Cost_ZAR| Fabric_m × Price_per_m               |
-| Labour_Cost      | Derived from Total − Material − 8%   |
-| Overhead_Cost    | 8% of Total Cost                     |
-| Total_Cost_ZAR   | Predicted by Random Forest model     |
-
-### Price per Metre Reference
-| Fabric    | Avg Price/m (ZAR) |
-|-----------|-------------------|
-| Cotton    | R 90              |
-| Denim     | R 114             |
-| Leather   | R 275             |
-| Linen     | R 140             |
-| Nylon     | R 70              |
-| Polyester | R 68              |
-| Silk      | R 173             |
-| Wool      | R 217             |
+| URL                     | View              | Description                               |
+| ----------------------- | ----------------- | ----------------------------------------- |
+| `/login/`               | `login_view`      | User login page using email and password  |
+| `/register/`            | `register_view`   | User registration page                    |
+| `/logout/`              | `logout_view`     | Logs the user out and redirects to login  |
+| `/estimator/`           | `estimator_view`  | Main garment cost estimator               |
+| `/api/predict/`         | `predict_ajax`    | AJAX prediction endpoint returning JSON   |
+| `/api/chat/`            | `chat_predict`    | Natural language chat prediction endpoint |
+| `/history/`             | `history_view`    | Paginated estimation history              |
+| `/history/delete/<id>/` | `delete_estimate` | Deletes a selected estimate               |
+| `/profile/`             | `profile_view`    | View and update tailor profile            |
+| `/admin/`               | Django Admin      | Administrative dashboard                  |
 
 
 
-## ML Model Notes
+# Model Inputs and Outputs
 
-The system uses a **Random Forest Regressor** wrapped in a sklearn Pipeline with:
-- `OneHotEncoder` for Garment and Fabric_Type
-- Numeric passthrough for Fabric_m and Price_per_m
+## Input Fields
 
-**Version mismatch handling:** If the saved `.joblib` file was trained on a different
-sklearn version, the system automatically retrains a new Random Forest from
-`group_7_dataset.csv` at startup. The retrained model is saved as
-`fine_tuned_random_forest_regressor_retrained.joblib` for future use.
+The estimation form accepts the following inputs:
 
-
-
-## Features
-
--  Login / Sign Up / Sign Out (email-based auth)
--  Tailor profile with avatar initials and stats
--  Cost + Material estimation with breakdown
--  Nearest comparable garments from dataset
--  Estimate history with filters + pagination
--  Delete estimates from history
--  Natural language chat input ("silk dress 3m")
--  AJAX prediction (no page reload)
--  Django Admin dashboard
--  Responsive layout (mobile sidebar collapses)
+| Field       | Type   | Example |
+| ----------- | ------ | ------- |
+| Garment     | Select | Dress   |
+| Fabric_Type | Select | Silk    |
+| Fabric_m    | Float  | 2.5     |
 
 
 
-## Django Admin
+## Output Fields
 
-Access at `/admin/` with your superuser credentials.
+The system generates the following outputs:
 
-**Registered models:**
-- **TailorProfile** – view all tailor accounts
-- **EstimateHistory** – view/filter/search all estimates across all users
+| Field             | Description                                |
+| ----------------- | ------------------------------------------ |
+| Material_Cost_ZAR | Fabric metres × Price per metre            |
+| Labour_Cost       | Total Cost − Material Cost − Overhead Cost |
+| Overhead_Cost     | 8% of Total Cost                           |
+| Total_Cost_ZAR    | Predicted by the Random Forest model       |
+
+---
+
+# Fabric Price Reference
+
+| Fabric Type | Average Price per Metre (ZAR) |
+| ----------- | ----------------------------- |
+| Cotton      | R90                           |
+| Denim       | R114                          |
+| Leather     | R275                          |
+| Linen       | R140                          |
+| Nylon       | R70                           |
+| Polyester   | R68                           |
+| Silk        | R173                          |
+| Wool        | R217                          |
+
+---
+
+# Machine Learning Model
+
+The application uses a **Random Forest Regressor** implemented through a Scikit-learn Pipeline.
+
+### Pipeline Components
+
+* **OneHotEncoder** for:
+
+  * Garment
+  * Fabric_Type
+
+* **Numeric Passthrough** for:
+
+  * Fabric_m
+  * Price_per_m
+
+### Version Compatibility Handling
+
+If the saved `.joblib` model was trained using a different version of Scikit-learn, the application automatically retrains a new Random Forest model using:
+
+```text
+group_7_dataset.csv
+```
+
+The newly trained model is then saved as:
+
+```text
+fine_tuned_random_forest_regressor_retrained.joblib
+```
+
+This retrained model will be used automatically during future application startups.
 
 
 
-## Deployment Notes (Production)
+# System Features
 
-1. Set `DEBUG = False` in `settings.py`
-2. Change `SECRET_KEY` to a secure random string
-3. Set `ALLOWED_HOSTS = ['yourdomain.com']`
-4. Run `python manage.py collectstatic`
-5. Use gunicorn + nginx in production
-6. Use PostgreSQL instead of SQLite for production
+* User Login, Registration, and Logout
+* Email-based Authentication
+* Tailor Profile Management
+* Avatar Initials and User Statistics
+* Garment Cost Estimation
+* Material Cost Breakdown
+* Labour and Overhead Cost Calculation
+* Comparable Garment Recommendations
+* Estimate History Tracking
+* Filtering and Pagination
+* Estimate Deletion
+* Natural Language Input Support
+
+  * Example: `"silk dress 3m"`
+* AJAX-Based Predictions
+* No Page Reload Required
+* Django Administration Dashboard
+* Responsive User Interface
+* Mobile-Friendly Navigation
+
+---
+
+# Django Administration
+
+Access the administration dashboard through:
+
+```text
+/admin/
+```
+
+using your superuser credentials.
+
+## Registered Models
+
+### TailorProfile
+
+Allows administrators to:
+
+* View tailor accounts
+* Monitor profile information
+* Manage user-related records
+
+### EstimateHistory
+
+Allows administrators to:
+
+* View all garment estimates
+* Filter estimate records
+* Search historical predictions
+* Manage estimate data across all users
 
 
 
-## Troubleshooting
+# Production Deployment
 
-**"No module named 'sklearn'"**
- Run `pip install scikit-learn`
+Before deploying the application to production, complete the following steps:
 
-**Model version warning**
-The system will auto-retrain. Check logs for "Model retrained."
+## 1. Disable Debug Mode
 
-**Migrations error**
- Delete `db.sqlite3` and re-run `python manage.py migrate`
+In `settings.py`:
 
-**Static files not loading**
- Run `python manage.py collectstatic` or confirm `STATICFILES_DIRS` path is correct
+```python
+DEBUG = False
+```
+
+## 2. Configure a Secure Secret Key
+
+Replace the default secret key with a strong, randomly generated key.
+
+## 3. Configure Allowed Hosts
+
+```python
+ALLOWED_HOSTS = ['yourdomain.com']
+```
+
+## 4. Collect Static Files
+
+```bash
+python manage.py collectstatic
+```
+
+## 5. Configure Application Server
+
+Use:
+
+* Gunicorn
+* Nginx
+
+for serving the application in production.
+
+## 6. Use PostgreSQL
+
+Replace SQLite with PostgreSQL for improved scalability, reliability, and production readiness.
+
+
+
+# Troubleshooting
+
+## Error: No module named 'sklearn'
+
+Install Scikit-learn:
+
+```bash
+pip install scikit-learn
+```
+
+---
+
+## Model Version Warning
+
+If a model version mismatch is detected, the application automatically retrains the model.
+
+Check the application logs for:
+
+```text
+Model retrained.
+```
+
+
+
+## Migration Errors
+
+Delete the existing database and rerun migrations:
+
+```bash
+rm db.sqlite3
+
+python manage.py migrate
+```
+
+
+
+## Static Files Not Loading
+
+Run:
+
+```bash
+python manage.py collectstatic
+```
+
+Also verify that the `STATICFILES_DIRS` configuration points to the correct static files directory.
+
+---
+
+# Summary
+
+The Tailor Cost Prediction System is a Django-based web application developed by **University of Zululand Group 7** that combines machine learning and web technologies to estimate garment production costs. The system provides user authentication, profile management, estimation history, natural language input, predictions, and administrative tools while leveraging a Random Forest Regressor for accurate cost estimation.
+
